@@ -2,6 +2,8 @@ const APIKEY = 'AIzaSyCjQeMa3AVf38yIkwZAu3icqvSpxwGhmfw';
 
 const YOUTUBE_SEARCH_URL = "https://www.googleapis.com/youtube/v3/search";
 
+let nextPageData = '';
+
 function getDataFromApi(searchTerm, callback) {
     const query = {
         part: 'snippet',
@@ -10,6 +12,17 @@ function getDataFromApi(searchTerm, callback) {
         maxResults: 6,
     }
     $.getJSON(YOUTUBE_SEARCH_URL, query, callback)
+}
+
+function getPageFromApi(searchTerm, callback, nextPage){
+    const query = {
+        part: 'snippet',
+        q: searchTerm,
+        key: APIKEY,
+        maxResults: 6,
+        pageToken: nextPage
+    }
+        $.getJSON(YOUTUBE_SEARCH_URL, query, callback)
 }
 
 function renderResult(result) {
@@ -24,6 +37,8 @@ function renderResult(result) {
 }
 
 function displayYoutubeSearchData(data) {
+    console.log(data);
+    nextPageData = data.nextPageToken;
     const results = data.items.map((item, index) => renderResult(item));
     $('.js-search-results').html(results);
 }
