@@ -14,7 +14,7 @@ function getDataFromApi(searchTerm, callback) {
     $.getJSON(YOUTUBE_SEARCH_URL, query, callback)
 }
 
-function getPageFromApi(searchTerm, callback, nextPage){
+function getPageFromApi(searchTerm, callback, nextPage) {
     const query = {
         part: 'snippet',
         q: searchTerm,
@@ -22,7 +22,7 @@ function getPageFromApi(searchTerm, callback, nextPage){
         maxResults: 6,
         pageToken: nextPage
     }
-        $.getJSON(YOUTUBE_SEARCH_URL, query, callback)
+    $.getJSON(YOUTUBE_SEARCH_URL, query, callback)
 }
 
 function renderResult(result) {
@@ -36,11 +36,18 @@ function renderResult(result) {
     `;
 }
 
+function renderButtons() {
+    return `
+    <button id="js-prev">Prev Page</button><button onclick="getPageFromApi()" id="js-next">Next Page</button>
+    `;
+}
+
 function displayYoutubeSearchData(data) {
     console.log(data);
     nextPageData = data.nextPageToken;
     const results = data.items.map((item, index) => renderResult(item));
     $('.js-search-results').html(results);
+    $('.js-nav-buttons').html(renderButtons());
 }
 
 function watchSubmit() {
