@@ -2,14 +2,16 @@ const APIKEY = 'AIzaSyCjQeMa3AVf38yIkwZAu3icqvSpxwGhmfw';
 
 const YOUTUBE_SEARCH_URL = "https://www.googleapis.com/youtube/v3/search";
 
-let nextPageData = '';
+let query = '';
+let nextPageFunc = null;
+let prevPageFunc = null;
 
 function getDataFromApi(searchTerm, callback) {
     const query = {
         part: 'snippet',
         q: searchTerm,
         key: APIKEY,
-        maxResults: 6,
+        maxResults: 3,
     }
     $.getJSON(YOUTUBE_SEARCH_URL, query, callback)
 }
@@ -19,7 +21,7 @@ function getPageFromApi(searchTerm, callback, nextPage) {
         part: 'snippet',
         q: searchTerm,
         key: APIKEY,
-        maxResults: 6,
+        maxResults: 3,
         pageToken: nextPage
     }
     $.getJSON(YOUTUBE_SEARCH_URL, query, callback)
@@ -38,13 +40,18 @@ function renderResult(result) {
 
 function renderButtons() {
     return `
-    <button id="js-prev">Prev Page</button><button onclick="getPageFromApi()" id="js-next">Next Page</button>
+    <button id="js-prev" onclick="prevPageFunc()">Prev Page</button><button onclick="nextPageFunc()" id="js-next">Next Page</button>
     `;
 }
 
 function displayYoutubeSearchData(data) {
     console.log(data);
-    nextPageData = data.nextPageToken;
+    nextPageFunc = function () {
+        getPageFromApi(query, displayYoutubeSearchData, data.nextPageToken)
+    }
+    prevPageFunc = function () {
+        getPageFromApi(query, displayYoutubeSearchData, data.prevPageToken)
+    }
     const results = data.items.map((item, index) => renderResult(item));
     $('.js-search-results').html(results);
     $('.js-nav-buttons').html(renderButtons());
@@ -54,7 +61,7 @@ function watchSubmit() {
     $('.js-search-form').submit(event => {
         event.preventDefault();
         const queryTarget = $(event.currentTarget).find('.js-query');
-        const query = queryTarget.val();
+        query = queryTarget.val();
 
         queryTarget.val('');
         getDataFromApi(query, displayYoutubeSearchData);
