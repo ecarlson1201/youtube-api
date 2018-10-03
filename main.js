@@ -5,6 +5,11 @@ const YOUTUBE_SEARCH_URL = "https://www.googleapis.com/youtube/v3/search";
 let query = '';
 let nextPageFunc = null;
 let prevPageFunc = null;
+let searchData = '';
+let clicked = '';
+
+const MODAL = $("#myModal");
+const PLAYER = $('iframe');
 
 function getDataFromApi(searchTerm, callback) {
     const query = {
@@ -33,7 +38,7 @@ function renderResult(result) {
         <h2>
         <a class='js-result-name' href='https://www.youtube.com/watch?v=${result.id.videoId}' target='_blank'>${result.snippet.title}</a></h2>
         <a class='js-result-name' href='https://www.youtube.com/channel/${result.snippet.channelId}' target='_blank'>${result.snippet.channelTitle}</a><br>
-        <img src='${result.snippet.thumbnails.medium.url}' height='90' width='120'>
+        <img class="js-thumbnail" src='${result.snippet.thumbnails.medium.url}' height='90' width='120'>
     </div><br>
     `;
 }
@@ -45,7 +50,7 @@ function renderButtons() {
 }
 
 function displayYoutubeSearchData(data) {
-    console.log(data);
+    searchData = data
     nextPageFunc = function () {
         getPageFromApi(query, displayYoutubeSearchData, data.nextPageToken)
     }
@@ -57,6 +62,29 @@ function displayYoutubeSearchData(data) {
     $('.js-nav-buttons').html(renderButtons());
 }
 
+
+function renderModalVideo (){
+    PLAYER.prop('src', `https://www.youtube.com/watch?v=${searchData.items[clicked].id.videoId}`)
+}
+
+function displayModal() {
+    $('body').on('click', 'img', function (event) {
+        MODAL.css('display', 'block')
+        clicked = $('img').toArray().indexOf(event.target)
+        renderModalVideo()
+    });
+    closeModal()
+}
+
+function closeModal() {
+    $('span').click(function(){
+        MODAL.css('display', 'none')
+    });
+    MODAL.click(function(){
+        MODAL.css('display','none')
+    }); 
+}
+
 function watchSubmit() {
     $('.js-search-form').submit(event => {
         event.preventDefault();
@@ -65,6 +93,7 @@ function watchSubmit() {
 
         queryTarget.val('');
         getDataFromApi(query, displayYoutubeSearchData);
+        $(displayModal);
     });
 }
 
