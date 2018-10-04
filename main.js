@@ -46,6 +46,7 @@ function renderResult(result) {
 function renderButtons() {
     return `
     <button id="js-prev" onclick="prevPageFunc()">Prev Page</button><button onclick="nextPageFunc()" id="js-next">Next Page</button>
+    <p>Total Results: ${searchData.pageInfo.totalResults}</p>
     `;
 }
 
@@ -59,12 +60,13 @@ function displayYoutubeSearchData(data) {
     }
     const results = data.items.map((item, index) => renderResult(item));
     $('.js-search-results').html(results);
+    $('.js-search-results').prop('hidden', false)
     $('.js-nav-buttons').html(renderButtons());
 }
 
 
 function renderModalVideo (){
-    PLAYER.prop('src', `https://www.youtube.com/watch?v=${searchData.items[clicked].id.videoId}`)
+    PLAYER.prop('src', `https://www.youtube.com/embed?v=${searchData.items[clicked].id.videoId}`)
 }
 
 function displayModal() {

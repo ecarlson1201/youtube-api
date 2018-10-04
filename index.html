@@ -12,10 +12,10 @@
 </head>
 
 <body>
-    <header>       
+    <header role="banner">       
         <h1>Search Videos on Youtube</h1>
     </header>
-    <main>
+    <main role="main">
 
         <form action="#" class="js-search-form">
             <label for="query"></label>
@@ -24,7 +24,7 @@
         </form>
 
         <h2>Results</h2>
-        <div class="js-search-results"></div>
+        <div class="js-search-results" aria-live="assertive" hidden></div>
         <div class="js-nav-buttons"></div>
 
         <div class="modal" id="myModal">
