@@ -38,7 +38,7 @@ function renderResult(result) {
         <h2>
         <a class='js-result-name' href='https://www.youtube.com/watch?v=${result.id.videoId}' target='_blank'>${result.snippet.title}</a></h2>
         <a class='js-result-name' href='https://www.youtube.com/channel/${result.snippet.channelId}' target='_blank'>${result.snippet.channelTitle}</a><br>
-        <img class="js-thumbnail" src='${result.snippet.thumbnails.medium.url}' height='90' width='120'>
+        <img alt='thumbnail' class="js-thumbnail" src='${result.snippet.thumbnails.medium.url}' height='90' width='120'>
     </div><br>
     `;
 }
