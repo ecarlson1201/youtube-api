@@ -99,4 +99,6 @@ function watchSubmit() {
     });
 }
 
+console.log('hello world');
+
 $(watchSubmit);
